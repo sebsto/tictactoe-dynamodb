@@ -11,8 +11,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from boto.dynamodb2.items import Item
-from datetime             import datetime
+from datetime import datetime
 
 class Game:
     """
@@ -58,12 +57,12 @@ class Game:
             return self.hostId
 
     def getResult(self, current_player):
-        if self.item["Result"] == None:
-            return None
-        if self.item["Result"] == "Tie":
-            return "Tie"
-        if self.item["Result"] == current_player:
-            return "Win"
+        if 'Result' in self.item:
+            if self.item["Result"] == "Tie":
+                return "Tie"
+            if self.item["Result"] == current_player:
+                return "Win"
+            else:
+                return "Lose"
         else:
-            return "Lose"
-
+            return None

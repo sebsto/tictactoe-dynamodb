@@ -1,5 +1,13 @@
 # Tic Tac Toe on DynamoDB
 
+This is a modernized version of the original [Tic Tac Toe DynamoDB](https://github.com/amazon-archives/dynamodb-tictactoe-example-app) demo app. 
+
+This version runs on Python 3 and uses Boto 3 to access DynamoDB.
+
+Original README.md is below
+
+---- 
+
 TicTacToe is a lightweight application that runs on Python and depends on two packages, Flask(0.9) and Boto(2.27).  If you want in depth information about the application and DynamoDB check out [Tic Tac Toe on DynamoDB](http://docs.aws.amazon.com/amazondynamodb/latest/developerguide/ExampleApps.html).
 
 Below are instructions that will help you launch the application.
@@ -43,7 +51,7 @@ Once you have these dependencies set up, you will have to run the application wi
 The full list of options is as follows:
 
       python application.py [-h] [--config pathToConfig] [--mode (local | service)]
-                            [--endpoint ENDPOINT] [--port dbPort] [--serverPort flaskPort]
+                            [--endpoint ENDPOINT] [--serverPort flaskPort]
 
 Additionally you can set your ENVIRONMENT VARIABLES: **AWS_ACCESS_KEY_ID** and **AWS_SECRET_ACCESS_KEY** instead of using config file.
 This way, you can just run the following command and start the webserver on the default port 5000 and call DynamoDB in the SDK's default region.

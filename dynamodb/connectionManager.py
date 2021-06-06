@@ -11,13 +11,14 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-from .setupDynamoDB          import getDynamoDBConnection, createGamesTable
-from boto.dynamodb2.table   import Table
-from uuid                   import uuid4
+from .setupDynamoDB import getDynamoDBConnection, createGamesTable
+from uuid           import uuid4
+
+import boto3
 
 class ConnectionManager:
 
-    def __init__(self, mode=None, config=None, endpoint=None, port=None, use_instance_metadata=False):
+    def __init__(self, mode=None, config=None, endpoint=None, use_instance_metadata=False):
         self.db = None
         self.gamesTable = None
 
@@ -25,10 +26,8 @@ class ConnectionManager:
             if config is not None:
                 raise Exception('Cannot specify config when in local mode')
             if endpoint is None:
-                endpoint = 'localhost'
-            if port is None:
-                port = 8000
-            self.db = getDynamoDBConnection(endpoint=endpoint, port=port, local=True)
+                endpoint = 'http://localhost:8000'
+            self.db = getDynamoDBConnection(endpoint=endpoint, local=True)
         elif mode == "service":
             self.db = getDynamoDBConnection(config=config, endpoint=endpoint, use_instance_metadata=use_instance_metadata)
         else:
@@ -38,7 +37,7 @@ class ConnectionManager:
 
     def setupGamesTable(self):
         try:
-            self.gamesTable = Table("Games", connection=self.db)
+            self.gamesTable = self.db.Table("Games")
         except Exception as e:
             raise e("There was an issue trying to retrieve the Games table.")
 
