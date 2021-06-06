@@ -52,9 +52,8 @@ def getDynamoDBConnection(config=None, endpoint=None, local=False, use_instance_
         if 'host' not in params and use_instance_metadata:
             response = urlopen('http://169.254.169.254/latest/dynamic/instance-identity/document').read()
             doc = json.loads(response);
-            params['host'] = f"dynamodb.{doc['region']}.amazonaws.com"
-            if 'region' in params:
-                del params['region_name']
+            params['endpoint_url'] = f"https://dynamodb.{doc['region']}.amazonaws.com"
+            params['region_name'] = doc['region']
 
         db = resource('dynamodb', **params)
     return db
