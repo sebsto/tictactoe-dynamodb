@@ -60,8 +60,10 @@ class GameController:
         Returns None on an ItemNotFound Exception.
         """
         try:
-            item = self.cm.getGamesTable().get_item(Key={'GameId':gameId})
+            item = self.cm.getGamesTable().get_item(
+                Key={'GameId':gameId})
         except ClientError as ce:
+            print(f"getGame ERROR : {ce}")
             return None
 
         return item['Item']
@@ -311,7 +313,7 @@ class GameController:
                             games.append(rest)
                     return games
 
-            if game_one > game_two:
+            if game_one['StatusDate'] > game_two['StatusDate']:
                 games.append(game_one)
                 game_one = None
             else:
