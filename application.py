@@ -18,7 +18,8 @@ from models.game                    import Game
 from uuid                           import uuid4
 from flask                          import Flask, render_template, request, session, flash, redirect, jsonify, json
 from configparser                   import ConfigParser
-import os, time, sys, argparse
+from datetime                       import timedelta
+import os, argparse
 
 application = Flask(__name__)
 application.debug = True
@@ -74,6 +75,11 @@ if 'SERVER_PORT' in os.environ:
 
 if serverPort is None:
     serverPort = 5000
+
+@application.before_request
+def make_session_permanent():
+    session.permanent = True
+    application.permanent_session_lifetime = timedelta(hours=1)
 
 """
    Define the urls and actions the app responds to
