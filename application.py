@@ -19,6 +19,7 @@ from uuid                           import uuid4
 from flask                          import Flask, render_template, request, session, flash, redirect, jsonify, json
 from configparser                   import ConfigParser
 from datetime                       import timedelta
+import requests
 import os, argparse
 
 application = Flask(__name__)
@@ -139,8 +140,14 @@ def index():
     finishedGames   = controller.getGamesWithStatus(session["username"], "FINISHED")
     fs = [Game(finishedGame) for finishedGame in finishedGames]
 
+    # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
+    r = requests.get("http://169.254.169.254/latest/dynamic/instance-identity/document")
+    response_json = r.json()
+    region = response_json.get('region')
+
     return render_template("index.html",
             user=session["username"],
+            region=region,
             invites=inviteGames,
             inprogress=inProgressGames,
             finished=fs)
