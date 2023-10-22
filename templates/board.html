@@ -4,7 +4,11 @@
     <div class="jumbotron">
         <center>
         {% if result != None %}
-        <h1 style="color:red"> You {{result}} </h1>
+           {% if result == "Win" %}
+                <h1 style="color:green"> You {{result}} </h1>
+            {% else %}
+                <h1 style="color:red"> You {{result}} </h1>
+            {% endif %})
         {% endif %}
         <div class="TTTBoard">
             <table style="position:relative;">
