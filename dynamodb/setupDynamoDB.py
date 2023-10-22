@@ -12,43 +12,13 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from boto3 import resource
-import requests
-import json
+import imdsv2
 
 try:
     from urllib.request import urlopen
 except ImportError:
     from urllib import urlopen
 import json
-
-def getIMDSv2Token(duration = 3600):
-    url = "http://169.254.169.254/latest/api/token"
-    headers = {"X-aws-ec2-metadata-token-ttl-seconds": f"{duration}"}
-
-    response = requests.put(url, headers=headers)
-
-    if response.status_code == 200:
-        TOKEN = response.text
-        return TOKEN
-    else:
-        print(f"Failed to obtain a token. Status code: {response.status_code}")
-        return ""
-        
-def getEC2RegionIMDSv2():
-
-        TOKEN = getIMDSv2Token()
-        url = "http://169.254.169.254/latest/dynamic/instance-identity/document"
-        headers = {"X-aws-ec2-metadata-token": TOKEN}
-
-        response = requests.get(url, headers=headers)
-
-        if response.status_code == 200:
-            metadata = json.loads(response.text)
-            return metadata['region']
-        else:
-            print(f"Failed to retrieve metadata. Status code: {response.status_code}")
-            return ""
-        
 
 def getDynamoDBConnection(config=None, endpoint=None, local=False, use_instance_metadata=False):
     if local:

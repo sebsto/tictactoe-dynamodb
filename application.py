@@ -140,10 +140,15 @@ def index():
     finishedGames   = controller.getGamesWithStatus(session["username"], "FINISHED")
     fs = [Game(finishedGame) for finishedGame in finishedGames]
 
-    # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
-    r = requests.get("http://169.254.169.254/latest/dynamic/instance-identity/document")
-    response_json = r.json()
-    region = response_json.get('region')
+    if use_instance_metadata:
+        # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
+        import imdsv2
+        region = imdsv2.getEC2RegionIMDSv2()
+    else:
+        if config is not None and config.has_option('dynamodb', 'region'):
+            region = config.get('dynamodb', 'region')
+        else:
+            raise Exception('Can not find DynamoDB region in config. Did you specify a config file with --config option ?')
 
     return render_template("index.html",
             user=session["username"],
