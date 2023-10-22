@@ -41,3 +41,18 @@ def getEC2RegionIMDSv2():
         else:
             print(f"Failed to retrieve metadata. Status code: {response.status_code}")
             return ""
+        
+def getEC2AvailabilityZoneIMDSv2():
+
+        TOKEN = getIMDSv2Token()
+        url = "http://169.254.169.254/latest/dynamic/instance-identity/document"
+        headers = {"X-aws-ec2-metadata-token": TOKEN}
+
+        response = requests.get(url, headers=headers)
+
+        if response.status_code == 200:
+            metadata = json.loads(response.text)
+            return metadata['availabilityZone']
+        else:
+            print(f"Failed to retrieve metadata. Status code: {response.status_code}")
+            return ""        

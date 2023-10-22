@@ -19,7 +19,6 @@ from uuid                           import uuid4
 from flask                          import Flask, render_template, request, session, flash, redirect, jsonify, json
 from configparser                   import ConfigParser
 from datetime                       import timedelta
-import requests
 import os, argparse
 
 application = Flask(__name__)
@@ -140,10 +139,11 @@ def index():
     finishedGames   = controller.getGamesWithStatus(session["username"], "FINISHED")
     fs = [Game(finishedGame) for finishedGame in finishedGames]
 
+    availabilityZone = None 
     if use_instance_metadata:
-        # https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/instance-identity-documents.html
         import imdsv2
         region = imdsv2.getEC2RegionIMDSv2()
+        availabilityZone = imdsv2.getEC2AvailabilityZoneIMDSv2()
     else:
         if config is not None and config.has_option('dynamodb', 'region'):
             region = config.get('dynamodb', 'region')
@@ -152,7 +152,7 @@ def index():
 
     return render_template("index.html",
             user=session["username"],
-            region=region,
+            region=region if availabilityZone == None else availabilityZone,
             invites=inviteGames,
             inprogress=inProgressGames,
             finished=fs)
