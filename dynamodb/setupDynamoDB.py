@@ -12,7 +12,7 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 from boto3 import resource
-import imdsv2
+from imdsv2 import getEC2RegionIMDSv2
 
 try:
     from urllib.request import urlopen
